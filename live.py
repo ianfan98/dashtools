@@ -1,4 +1,4 @@
-# MPEG DASH live edge calculator
+# MPEG DASH MPD live edge calculator
 # tested with Python 3.4.1
 # 2016-03-15 Initial
 
