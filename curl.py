@@ -32,12 +32,6 @@ else: #default
   mpdurl='http://q-cdn-cg8-linear-d6b64136.movetv.com/cms/api/channels/176/schedule/now/live.mpd'
 f = urllib.request.urlopen(mpdurl)
 
-# TODO http header dump
-#info = f.info()
-#headerDate = info.get_all('date')
-#print('Date from Header: ', headerDate[0])
-
-mpd = f.read()
-root = ET.fromstring(mpd.decode('utf-8'))
-print(mpd.decode('utf-8'))
+txt = f.read()
+print(txt.decode('utf-8'))
 exit()
