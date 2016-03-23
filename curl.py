@@ -14,7 +14,7 @@ import urllib.request
 #print('Num of Args=', len(sys.argv), 'argument')
 #print('Arg list:', str(sys.argv))
 if (len(sys.argv) != 2):
-  print("Usage: curl.py url")
+  print("Usage: curl.py <url>")
   exit()
 
 if (len(sys.argv) == 2):
@@ -29,7 +29,7 @@ if(SrcIsURL):
   mpdurl = sys.argv[1]
   #print('src is URL:', mpdurl)
 else: #default
-  mpdurl='http://q-cdn-cg8-linear-d6b64136.movetv.com/cms/api/channels/176/schedule/now/live.mpd'
+  mpdurl='http://dash.edgesuite.net/dash264/TestCases/5a/1/manifest.mpd'
 f = urllib.request.urlopen(mpdurl)
 
 txt = f.read()

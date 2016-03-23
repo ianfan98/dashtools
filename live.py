@@ -23,7 +23,9 @@ if (len(sys.argv) == 2):
     SrcIsURL = True
   else:
     SrcIsURL = False
-
+#
+# Live Edge
+#
 def liveEdge(startNumber, timeOffset, segDuration, sugPreDelay):
   edge = 0;
   edge = startNumber + (timeOffset-sugPreDelay)/segDuration
@@ -56,15 +58,13 @@ if(SrcIsURL):
   mpdurl = sys.argv[1]
   #print('src is URL:', mpdurl)
 else: #default
-  mpdurl='http://q-cdn-cg8-linear-d6b64136.movetv.com/cms/api/channels/176/schedule/now/live.mpd'
+  mpdurl='http://dash.edgesuite.net/dash264/TestCases/5a/1/manifest.mpd'
   #print('src is URL Use default')
 
 #tree = ET.parse('wowza.mpd')
 #root = tree.getroot()
 
 # read from URL
-#mpdurl= 'https://wowzaec2demo.streamlock.net/live/bigbuckbunny/manifest_mpm4sav_mvnumber.mpd'
-#mpdurl='http://q-cdn-cg8-linear-d6b64136.movetv.com/cms/api/channels/176/schedule/now/live.mpd'
 f = urllib.request.urlopen(mpdurl)
 info = f.info()
 headerDate = info.get_all('date')
@@ -193,8 +193,16 @@ for st in root.iter(ns):
   #t1 = datetime.strptime(mpd_ast, '%Y-%m-%dT%H:%M:%SZ') # not all has Z in it
   mpd_ast = mpd_ast.strip('Z') 
   t1 = datetime.strptime(mpd_ast, '%Y-%m-%dT%H:%M:%S')
-  d = t2 -t1
+  d = t2 - t1
   timeOffset = d.total_seconds()
   print( '%*s = %*s' % (-30, 'timeOffset', -30, timeOffset))
+
+  if mpd_aet != 'NA':
+    mpd_aet = mpd_aet.strip('Z') 
+    t3 = datetime.strptime(mpd_aet, '%Y-%m-%dT%H:%M:%S')
+    d = t3 - t1
+   # print('availability window size=', d.total_seconds(), ' sec ')
+    print( '%*s = %*s seconds' % (-30, 'availability window', -10, d.total_seconds()))
+
 
   liveEdge(sn, timeOffset, st_time,mpd_spd_f)
