@@ -78,7 +78,7 @@ mpd = f.read()
 root = ET.fromstring(mpd.decode('utf-8'))
 
 # show MPD
-print(mpd.decode('utf-8'))
+#print(mpd.decode('utf-8'))
 
 # get MPD level attributes
 
@@ -131,6 +131,32 @@ print( '%*s = %*s' % (-30, 'timeShiftBufferDepth', -30, mpd_tsbd))
 print( '%*s = %*s' % (-30, 'suggestedPresentationDelay', -30, mpd_spd))
 print( '%*s = %*s' % (-30, 'minBufferTime', -30, mpd_mbt))
 print( '%*s = %*s' % (-30, 'mediaPresentationDuration', -30, mpd_mpd))
+
+# Show Period attributes
+nodePeriod = mpd_xmlns + 'Period'
+count=0
+for p in root.findall(nodePeriod):
+  print( '%*s = %*s' % (-30, 'Period', -30, count))
+  count=count+1
+  if 'id' in p.attrib:
+    period_id = p.attrib['id']
+  else: 
+    period_id = "NA"
+
+  if 'duration' in p.attrib:
+    period_duration = p.attrib['duration']
+  else: 
+    period_duration = "NA"
+
+  if 'start' in p.attrib:
+    period_start = p.attrib['start']
+  else: 
+    period_start = "NA"
+  
+  print( '  %*s = %*s' % (-30, 'id', -30, period_id))
+  print( '  %*s = %*s' % (-30, 'duration', -30, period_duration))
+  print( '  %*s = %*s' % (-30, 'start', -30, period_start))
+
 
 # check if it is LIVE or VOD
 if mpd_ast == 'NA':
