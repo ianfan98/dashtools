@@ -12,16 +12,28 @@ import urllib.request
 #
 # Live Edge
 #
-def liveEdge(startNumber, timeOffset, segDuration, sugPreDelay):
+def liveEdge(startNumber, timeOffset, segDuration, sugPreDelay, periodDuration):
   print( '  %*s = %*s sec' % (-30, 'timeOffset', -30, timeOffset))
   print( '  %*s = %*s' % (-30, 'startNumber', -30, startNumber))
   print( '  %*s = %*s sec' % (-30, 'sugPreDelay', -30, sugPreDelay))
+  if(periodDuration != 'NA'):
+    print( '  %*s = %*s sec' % (-30, 'periodDuration', -30, ptTime2Seconds(periodDuration)))
+    if( timeOffset < 0):
+       print('Content will be available in ', timeOffset, 'sec')
+       return
+    if( timeOffset > ptTime2Seconds(periodDuration)):
+      print('Content is no longer available', timeOffset, 'sec')
+      return
 
   edge = 0;
-  edge = startNumber + (timeOffset-sugPreDelay)/segDuration
+  edge = startNumber + (timeOffset - sugPreDelay)/segDuration
+  MaxIndex = startNumber + (ptTime2Seconds(periodDuration) - sugPreDelay)/segDuration
+  
   #print('edge =	', edge, hex(math.floor(edge)))
   #print('Live Edge Segment Index = ', hex(math.floor(edge))[2:])
-  print( '  %*s = 0x%*s' % (-30, 'LIVE Edge Segment Index', -30, hex(math.floor(edge))[2:]))
+  print( '  %*s = 0x%08x' % (-30, 'LIVE Edge Segment Index', math.floor(edge)))
+  print( '  %*s = 0x%08x' % (-30, 'startNumber', startNumber))
+  print( '  %*s = 0x%08x' % (-30, 'Max Segment Index', math.floor(MaxIndex)))
   return
 
 def epoTime(isoTime):
@@ -101,8 +113,9 @@ def doSegmentTemplate(mpd_ast, mpd_aet, mpd_spd, period_duration):
     print( '  %*s = %*s' % (-30, 'availabilityStartTime', -30, mpd_ast))
 
     #t1 = datetime.strptime(mpd_ast, '%Y-%m-%dT%H:%M:%SZ') # not all has Z in it
-    mpd_ast = mpd_ast.strip('Z') 
-    t1 = datetime.strptime(mpd_ast, '%Y-%m-%dT%H:%M:%S')
+    if(mpd_ast != 'NA'):
+      mpd_ast = mpd_ast.strip('Z') 
+      t1 = datetime.strptime(mpd_ast, '%Y-%m-%dT%H:%M:%S')
     d = t2 - t1
     timeOffset = d.total_seconds()
     #print( '  %*s = %*s' % (-30, 'timeOffset', -30, timeOffset))
@@ -119,7 +132,7 @@ def doSegmentTemplate(mpd_ast, mpd_aet, mpd_spd, period_duration):
         val = ptTime2Seconds(mpd_spd)
       else:
         val = 0 
-      liveEdge(sn, timeOffset, st_time, val)
+      liveEdge(sn, timeOffset, st_time, val, period_duration)
       # progress
       if(period_duration != 'NA'):
         print( '  Playback progress now ', round(100*timeOffset/ptTime2Seconds(period_duration)) , '%')
